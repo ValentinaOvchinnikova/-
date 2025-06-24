@@ -1,67 +1,28 @@
 {
-    "Symptoms": {
-        "": 1,
-        "Blurred Vision": 1,
-        "Confusion": 1,
-        "Difficulty Speaking": 1,
-        "Dizziness": 1,
-        "Headache": 1,
-        "Loss of Balance": 1,
-        "Numbness": 1,
-        "Seizures": 1,
-        "Severe Fatigue": 1,
-        "Weakness": 1
-    },
-    "Gender": {
+    "gender": {
         "Female": 0,
-        "Male": 1
+        "Male": 1,
+        "Other": 2
     },
-    "Marital Status": {
-        "Divorced": 0,
-        "Married": 1,
-        "Single": 2
-    },
-    "Work Type": {
-        "Government Job": 0,
-        "Never Worked": 1,
-        "Private": 2,
-        "Self-employed": 3
-    },
-    "Residence Type": {
-        "Rural": 0,
-        "Urban": 1
-    },
-    "Smoking Status": {
-        "Currently Smokes": 0,
-        "Formerly Smoked": 1,
-        "Non-smoker": 2
-    },
-    "Alcohol Intake": {
-        "Frequent Drinker": 0,
-        "Never": 1,
-        "Rarely": 2,
-        "Social Drinker": 3
-    },
-    "Physical Activity": {
-        "High": 0,
-        "Low": 1,
-        "Moderate": 2
-    },
-    "Family History of Stroke": {
+    "ever_married": {
         "No": 0,
         "Yes": 1
     },
-    "Dietary Habits": {
-        "Gluten-Free": 0,
-        "Keto": 1,
-        "Non-Vegetarian": 2,
-        "Paleo": 3,
-        "Pescatarian": 4,
-        "Vegan": 5,
-        "Vegetarian": 6
+    "work_type": {
+        "Govt_job": 0,
+        "Never_worked": 1,
+        "Private": 2,
+        "Self-employed": 3,
+        "children": 4
     },
-    "Diagnosis": {
-        "No Stroke": 0,
-        "Stroke": 1
+    "Residence_type": {
+        "Rural": 0,
+        "Urban": 1
+    },
+    "smoking_status": {
+        "Unknown": 0,
+        "formerly smoked": 1,
+        "never smoked": 2,
+        "smokes": 3
     }
 }
