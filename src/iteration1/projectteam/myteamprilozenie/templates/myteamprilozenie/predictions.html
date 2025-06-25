@@ -1,46 +1,116 @@
 {% extends "myteamprilozenie/base.html" %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h2>Результаты оценки риска</h2>
-    </div>
-    <div class="card-body">
-        <div class="alert 
-            {% if prediction.risk_level == 'VL' %}alert-success
-            {% elif prediction.risk_level == 'L' %}alert-info
-            {% elif prediction.risk_level == 'M' %}alert-warning
-            {% else %}alert-danger
-            {% endif %}">
-            <h4 class="alert-heading">
-                {% if prediction.risk_level == 'VL' %}Очень низкий риск
-                {% elif prediction.risk_level == 'L' %}Низкий риск
-                {% elif prediction.risk_level == 'M' %}Умеренный риск
-                {% elif prediction.risk_level == 'H' %}Высокий риск
-                {% else %}Очень высокий риск
-                {% endif %}
-            </h4>
-            <p>Вероятность инсульта: <strong>{{ prediction.probability|floatformat:2 }}%</strong></p>
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Результаты оценки риска инсульта</h2>
         </div>
-        
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <h4>Данные пациента:</h4>
-                <p><strong>ФИО:</strong> {{ prediction.patient.name }}</p>
-                <p><strong>Возраст:</strong> {{ prediction.patient.age }}</p>
-                <p><strong>Пол:</strong> {{ prediction.patient.get_gender_display }}</p>
+
+        <div class="card-body">
+            <!-- Блок с уровнем риска -->
+            <div class="alert alert-{{ prediction.get_risk_level_color }} alert-dismissible fade show">
+                <h4 class="alert-heading">
+                    <i class="bi bi-{{ prediction.get_risk_icon }}"></i>
+                    Уровень риска: {{ prediction.get_risk_level_display|upper }}
+                </h4>
+                <hr>
+                <p class="mb-1">
+                    <strong>Вероятность:</strong>
+                    <span class="badge bg-dark rounded-pill">
+                        {{ prediction.probability|floatformat:2 }}%
+                    </span>
+                </p>
+                <p class="mb-0"><strong>Рекомендации:</strong> {{ prediction.advice }}</p>
             </div>
-            <div class="col-md-6">
-                <h4>Ключевые показатели:</h4>
-                <p><strong>Давление:</strong> {{ prediction.medical_history.blood_pressure }}</p>
-                <p><strong>Глюкоза:</strong> {{ prediction.medical_history.average_glucose }}</p>
-                <p><strong>ИМТ:</strong> {{ prediction.medical_history.bmi }}</p>
+
+            <!-- Детали пациента -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h5><i class="bi bi-person"></i> Данные пациента</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>ФИО:</strong> {{ prediction.patient.name }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Возраст:</strong> {{ prediction.patient.age }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Пол:</strong> {{ prediction.patient.get_gender_display }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5><i class="bi bi-clipboard2-pulse"></i> Ключевые показатели</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Давление:</strong> {{ prediction.medical_history.blood_pressure }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Глюкоза:</strong> {{ prediction.medical_history.average_glucose }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>ИМТ:</strong> {{ prediction.medical_history.bmi }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <div class="mt-4">
-            <a href="{% url 'myteamprilozenie:home' %}" class="btn btn-primary">Новая оценка</a>
+
+            <!-- Дополнительная информация -->
+            <div class="mt-4">
+                <div class="alert alert-info">
+                    <h5><i class="bi bi-info-circle"></i> Что это значит?</h5>
+                    <p>
+                        {% if prediction.risk_level == 'VL' %}
+                        Ваш риск инсульта значительно ниже среднего. Продолжайте вести здоровый образ жизни.
+                        {% elif prediction.risk_level == 'L' %}
+                        У вас хорошие показатели, но есть небольшой риск. Рекомендуем регулярные проверки.
+                        {% elif prediction.risk_level == 'M' %}
+                        Умеренный риск требует внимания к факторам: контролируйте давление и уровень сахара.
+                        {% elif prediction.risk_level == 'H' %}
+                        Высокий риск - необходима консультация специалиста и изменение образа жизни.
+                        {% else %}
+                        Требуется срочное медицинское вмешательство и комплексное обследование.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <a href="{% url 'myteamprilozenie:home' %}" class="btn btn-primary me-md-2">
+                    <i class="bi bi-house"></i> На главную
+                </a>
+                <a href="{% url 'myteamprilozenie:medical_history' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-repeat"></i> Новая оценка
+                </a>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Подключение иконок Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+
+<style>
+    .alert-success { background-color: #d1e7dd; border-color: #badbcc; }
+    .alert-info { background-color: #cff4fc; border-color: #b6effb; }
+    .alert-warning { background-color: #fff3cd; border-color: #ffecb5; }
+    .alert-danger { background-color: #f8d7da; border-color: #f5c2c7; }
+    .alert-dark { background-color: #d3d3d4; border-color: #bcbebf; }
+    .card-header { font-weight: 600; }
+</style>
 {% endblock %}

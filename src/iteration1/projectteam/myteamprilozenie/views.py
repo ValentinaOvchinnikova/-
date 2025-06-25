@@ -2,6 +2,12 @@ from django.shortcuts import render, redirect
 from django.db import transaction
 from .models import Patient, MedicalHistory, Prediction
 from .forms import PatientForm, MedicalHistoryForm
+from .utils import predskazanie
+
+from django.http import HttpResponse
+
+# def home(request):
+#     return HttpResponse("Сервер работает! Проверка связи.")
 
 def home(request):
     return render(request, 'myteamprilozenie/home.html')
@@ -25,31 +31,45 @@ def register_patient(request):
 
 
 def medical_history(request):
-    patient_id = request.session.get('patient_id') # Получаем как раз тот самый айди из открытой сессии
+    patient_id = request.session.get('patient_id')
     if not patient_id:
-        return redirect('register_patient') # Если айди не находит в сессии, то на форму регистрации
+        return redirect('register_patient')
 
     try:
-        patient = Patient.objects.get(pk=patient_id) # ищем пациента в базе данных
+        patient = Patient.objects.get(pk=patient_id)
     except Patient.DoesNotExist:
-        return redirect('register_patient') # если нет, то тоже на регистрацию
+        return redirect('register_patient')
 
     if request.method == 'POST':
         form = MedicalHistoryForm(request.POST)
         if form.is_valid():
-            with transaction.atomic():
-                medical_data = form.save(commit=False)
-                medical_data.patient = patient
-                medical_data.save() # Сохраняем только после того как форма привяжется к айди пациента
+            medical_data = form.save(commit=False)
+            medical_data.patient = patient
+            medical_data.save()
 
-                # Заглушка для ML модели
-                prediction = Prediction.objects.create(
-                    patient=patient,
-                    medical_history=medical_data,
-                    probability=0.0,
-                    risk_level='M'
-                )
-                return redirect('myteamprilozenie:prediction_result', prediction_id=prediction.pk)
+            # Прогнозирование
+            score, risk_level, advice = predskazanie(
+                gender=patient.gender,
+                age=patient.age,
+                hypertension=medical_data.hypertension,
+                heart_disease=medical_data.heart_disease,
+                ever_married=patient.marital_status,
+                work_type=patient.work_type,
+                residence_type=patient.residence_type,
+                avg_glucose_level=float(medical_data.average_glucose),
+                bmi=float(medical_data.bmi),
+                smoking_status=medical_data.smoking_status
+            )
+
+            # Сохранение прогноза
+            prediction = Prediction.objects.create(
+                patient=patient,
+                medical_history=medical_data,
+                probability=score,
+                risk_level=risk_level,
+                advice=advice  # Добавьте это поле в модель Prediction
+            )
+            return redirect('prediction_result', prediction_id=prediction.pk)
 
     else:
         form = MedicalHistoryForm()

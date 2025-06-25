@@ -2,6 +2,12 @@ from django.urls import path
 from . import views
 
 app_name = 'myteamprilozenie'  # Добавляем пространство имен
+# from django.urls import path
+# from . import views
+#
+# urlpatterns = [
+#     path('', views.home, name='home'),
+# ]
 
 urlpatterns = [
     path('', views.home, name='home'),

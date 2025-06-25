@@ -120,6 +120,11 @@ class Prediction(models.Model):
     risk_level = models.CharField(max_length=2, choices=RISK_LEVELS)
     # Дата создания прогноза
     created_at = models.DateTimeField(auto_now_add=True)
+    advice = models.TextField()  # Рекомендации
+
+    def get_risk_level_color(self):
+        colors = {'VL': 'success', 'L': 'info', 'M': 'warning', 'H': 'danger', 'VH': 'dark'}
+        return colors.get(self.risk_level, 'secondary')
     # Для строкового выведения и админки
     def __str__(self):
         return f"Прогноз для {self.patient.name} - {self.get_risk_level_display()}"

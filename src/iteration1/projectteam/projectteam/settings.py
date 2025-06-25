@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-b(7^1496!btjic#vfa249)#3of3-+%rp&+uwu)eb0w3sb-ix9)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -125,3 +125,4 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+MODEL_DIR = os.path.join(BASE_DIR, 'myteamprilozenie', 'model')
