@@ -10,7 +10,7 @@ class PatientForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}), # Свободное текстовое поле
             'age': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}), # Целочисленное значение
             'gender': forms.Select(attrs={'class': 'form-select'}), # выпадающий список
-            'marital_status': forms.Select(attrs={'class': 'form-select'}), # выпадающий список
+            'ever_married': forms.Select(attrs={'class': 'form-select'}), # выпадающий список
             'work_type': forms.Select(attrs={'class': 'form-select'}), # выпадающий список
             'residence_type': forms.Select(attrs={'class': 'form-select'}), # выпадающий список
         }

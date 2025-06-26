@@ -10,16 +10,16 @@ class Patient(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     # Выбор семейного положения
     MARITAL_CHOICES = [
-        ('Single', 'Холост/Не замужем'),
-        ('Married', 'Женат/Замужем'),
-        ('Divorced', 'Разведен(а)')
+        ('Yes', 'Состоял/Состою в браке'),
+        ('No', 'В браке не состоял никогда'),
     ]
     marital_status = models.CharField(max_length=15, choices=MARITAL_CHOICES)
     # Выбор типа работы пациента
     WORK_TYPE_CHOICES = [
         ('Private', 'Частный сектор'),
         ('Self-employed', 'Самозанятый'),
-        ('Government', 'Госслужащий'),
+        ('Govt_job', 'Госслужащий'),
+        ('children', 'Сижу с детьми'),
         ('Never_worked', 'Не работал(а)')
     ]
     work_type = models.CharField(max_length=20, choices=WORK_TYPE_CHOICES)
@@ -36,9 +36,9 @@ class Patient(models.Model):
 class MedicalHistory(models.Model):
     # Статус курильщика
     SMOKING_CHOICES = [
-        ('Non-smoker', 'Не курит'),
-        ('Formerly smoked', 'Бывший курильщик'),
-        ('Currently smokes', 'Курит')
+        ('never smoked', 'Не курит'),
+        ('formerly smoked', 'Бывший курильщик'),
+        ('smokes', 'Курит')
     ]
     # Частота приема алкоголя
     ALCOHOL_CHOICES = [
@@ -117,7 +117,7 @@ class Prediction(models.Model):
     # Вероятность инсульта
     probability = models.DecimalField(max_digits=5, decimal_places=4)
     # Уровень риска (то что выбрали в RISK_LEVELS)
-    risk_level = models.CharField(max_length=2, choices=RISK_LEVELS)
+    risk_level = models.CharField(max_length=50, choices=RISK_LEVELS)
     # Дата создания прогноза
     created_at = models.DateTimeField(auto_now_add=True)
     advice = models.TextField()  # Рекомендации

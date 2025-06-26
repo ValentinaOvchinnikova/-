@@ -69,7 +69,7 @@ def medical_history(request):
                 risk_level=risk_level,
                 advice=advice  # Добавьте это поле в модель Prediction
             )
-            return redirect('prediction_result', prediction_id=prediction.pk)
+            return redirect('myteamprilozenie:prediction_result', prediction_id=prediction.pk)
 
     else:
         form = MedicalHistoryForm()

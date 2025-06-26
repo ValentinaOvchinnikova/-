@@ -4,7 +4,7 @@ import lightgbm as lgb
 from django.conf import settings
 import os
 
-def predskazanie(gender: str, age: int, hypertension: int, heart_disease: int,
+def predskazanie(gender: str, age: int, hypertension: bool, heart_disease: bool,
                  ever_married: str, work_type: str, residence_type: str,
                  avg_glucose_level: float, bmi: float, smoking_status: str):
     """
@@ -20,8 +20,8 @@ def predskazanie(gender: str, age: int, hypertension: int, heart_disease: int,
     data = {
         'gender': mappings['gender'][gender],
         'age': age,
-        'hypertension': hypertension,
-        'heart_disease': heart_disease,
+        'hypertension': int(hypertension),
+        'heart_disease': int(heart_disease),
         'ever_married': mappings['ever_married'][ever_married],
         'work_type': mappings['work_type'][work_type],
         'Residence_type': mappings['Residence_type'][residence_type],
@@ -30,6 +30,12 @@ def predskazanie(gender: str, age: int, hypertension: int, heart_disease: int,
         'smoking_status': mappings['smoking_status'][smoking_status]
     }
     df = pd.DataFrame([data])
+
+    # Обозначаем категориальные столбцы
+    cat_features = ['gender', 'ever_married', 'work_type', 'Residence_type', 'smoking_status']
+    for col in cat_features:
+        df[col] = df[col].astype('category')
+
 
     # Загрузка модели
     model_path = os.path.join(model_dir, 'stroke_lgbm_model.txt')
